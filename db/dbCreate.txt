@@ -1,0 +1,96 @@
+-- Tworzenie tabeli dla grup mięśniowych
+CREATE TABLE muscle_groups (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+-- Tworzenie tabeli dla ćwiczeń
+CREATE TABLE exercises (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    instructions TEXT,
+    difficulty_level INTEGER,
+    muscle_group_id INTEGER,
+    FOREIGN KEY (muscle_group_id) REFERENCES muscle_groups(id) ON DELETE SET NULL
+);
+
+-- Tworzenie tabeli dla planów treningowych
+CREATE TABLE workout_plans (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    difficulty_level INTEGER,
+    description TEXT
+);
+
+-- Tworzenie tabeli powiązań ćwiczeń z planami treningowymi
+CREATE TABLE workout_plan_exercises (
+    id SERIAL PRIMARY KEY,
+    workout_plan_id INTEGER,
+    exercise_id INTEGER,
+    "order" INTEGER,
+    FOREIGN KEY (workout_plan_id) REFERENCES workout_plans(id) ON DELETE CASCADE,
+    FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
+);
+
+-- Tworzenie tabel dla modułu dietetycznego
+CREATE TABLE diet_categories (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE diet_subcategories (
+    id SERIAL PRIMARY KEY,
+    category_id INTEGER,
+    name TEXT NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES diet_categories(id) ON DELETE CASCADE
+);
+
+CREATE TABLE diet_tips (
+    id SERIAL PRIMARY KEY,
+    subcategory_id INTEGER,
+    title TEXT NOT NULL,
+    description TEXT,
+    FOREIGN KEY (subcategory_id) REFERENCES diet_subcategories(id) ON DELETE CASCADE
+);
+
+-- Dodawanie przykładowych danych do grup mięśniowych
+INSERT INTO muscle_groups (name) VALUES
+('Nogi'),
+('Klatka piersiowa'),
+('Plecy'),
+('Ramiona'),
+('Brzuch');
+
+-- Dodawanie przykładowych danych do ćwiczeń
+INSERT INTO exercises (name, description, instructions, difficulty_level, muscle_group_id) VALUES
+('Przysiady', 'Ćwiczenie na nogi', 'Stojąc w rozkroku, zginaj kolana, aż uda będą równoległe do podłogi.', 1, 1),
+('Pompki', 'Ćwiczenie na klatkę piersiową', 'Opierając się na rękach i palcach stóp, zginaj ramiona, obniżając ciało do podłogi.', 2, 2),
+('Martwy ciąg', 'Ćwiczenie na plecy', 'Podnieś ciężar z ziemi, utrzymując plecy prosto.', 3, 3),
+('Podciąganie na drążku', 'Ćwiczenie na ramiona i plecy', 'Podciągnij się na drążku, trzymając ręce szeroko.', 3, 3),
+('Brzuszki', 'Ćwiczenie na brzuch', 'Leżąc na plecach, unoś tułów w kierunku kolan.', 1, 5);
+
+-- Dodawanie przykładowych danych do planów treningowych
+INSERT INTO workout_plans (name, difficulty_level, description) VALUES
+('Plan dla początkujących', 1, 'Podstawowy plan treningowy dla osób początkujących.');
+
+-- Dodawanie przykładowych danych do powiązań ćwiczeń z planami treningowymi
+INSERT INTO workout_plan_exercises (workout_plan_id, exercise_id, "order") VALUES
+(1, 1, 1),
+(1, 2, 2),
+(1, 5, 3);
+
+-- Dodawanie przykładowych danych do modułu dietetycznego
+INSERT INTO diet_categories (name) VALUES
+('Porady na redukcję tkanki tłuszczowej'),
+('Porady na przyrost masy mięśniowej');
+
+INSERT INTO diet_subcategories (category_id, name) VALUES
+(1, 'Picie dużej ilości wody'),
+(1, 'Deficyt kaloryczny'),
+(2, 'Większa podaż białka');
+
+INSERT INTO diet_tips (subcategory_id, title, description) VALUES
+(1, 'Dlaczego warto pić dużo wody podczas redukcji', 'Woda pomaga w metabolizmie, usuwa toksyny i wspiera uczucie sytości.'),
+(2, 'Dlaczego trzeba jeść mniej kalorii', 'Aby schudnąć, musisz spożywać mniej kalorii niż spalasz.'),
+(3, 'Rola białka w budowaniu masy mięśniowej', 'Białko jest niezbędne do odbudowy mięśni po treningu.');

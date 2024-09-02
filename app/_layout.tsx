@@ -10,6 +10,8 @@ export default function RootLayout() {
       {/* Nowe ekrany */}
       <Stack.Screen name="NotificationModule" />
       <Stack.Screen name="TrainingModule" />
+      <Stack.Screen name="ExerciseList" />
+      <Stack.Screen name="WorkoutPlans" />
       <Stack.Screen name="NutritionModule" />
     </Stack>
   );

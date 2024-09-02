@@ -21,7 +21,7 @@ export default function Index() {
         onPress={() => router.push('/TrainingModule')}
         style={{ marginBottom: 20 }}
       >
-        <Text style={{ color: 'blue', fontSize: 18 }}>Modul treningowy (test db)</Text>
+        <Text style={{ color: 'blue', fontSize: 18 }}>Modul treningowy</Text>
       </TouchableOpacity>
 
       {/* Odnośnik do modułu dietetycznego */}

@@ -1,53 +1,35 @@
 // app/TrainingModule.tsx
-import React, { useState, useEffect } from 'react';
-import { Text, View, FlatList } from 'react-native';
-import { supabase } from './../db/SupabaseConfig';
-
-// Funkcja do pobierania listy kategorii
-const getCategoryList = async () => {
-  const { data, error } = await supabase.from('Category').select('*');
-  if (error) {
-    console.error('Error fetching categories:', error);
-    return null;
-  } else {
-    console.log('Fetched Categories:', data);
-    return data;
-  }
-};
+import React from 'react';
+import { Text, View, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function TrainingModule() {
-  const [categories, setCategories] = useState<any[]>([]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const categoryData = await getCategoryList();
-      if (categoryData) {
-        setCategories(categoryData);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  const router = useRouter();
 
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
+        padding: 20,
       }}
     >
-      {/* Lista kategorii */}
-      <FlatList
-        data={categories}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={{ marginBottom: 10 }}>
-            <Text>Name: {item.name}</Text>
-            <Text>Created At: {item.created_at}</Text>
-          </View>
-        )}
-      />
+      {/* Odnośnik do spisu ćwiczeń */}
+      <TouchableOpacity
+        onPress={() => router.push('/ExerciseList')}
+        style={{ marginBottom: 20 }}
+      >
+        <Text style={{ color: 'blue', fontSize: 18 }}>Spis Ćwiczeń</Text>
+      </TouchableOpacity>
+
+      {/* Odnośnik do planów treningowych */}
+      <TouchableOpacity
+        onPress={() => router.push('/WorkoutPlans')}
+        style={{ marginBottom: 20 }}
+      >
+        <Text style={{ color: 'blue', fontSize: 18 }}>Plany Treningowe</Text>
+      </TouchableOpacity>
     </View>
   );
 }
