@@ -1,7 +1,8 @@
-// app/NutritionTips.tsx
 import React, { useEffect, useState } from 'react';
 import { Text, View, ScrollView, TouchableOpacity, Modal, Button, StyleSheet, Animated } from 'react-native';
 import { supabase } from './../db/SupabaseConfig';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export default function NutritionTips() {
   const [categories, setCategories] = useState([]);
@@ -9,6 +10,7 @@ export default function NutritionTips() {
   const [selectedTip, setSelectedTip] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const scaleValue = useState(new Animated.Value(0))[0];
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,14 +40,14 @@ export default function NutritionTips() {
     fetchData();
   }, []);
 
-  const toggleCategory = (categoryId) => {
+  const toggleCategory = (categoryId: number) => {
     setExpandedCategories((prev) => ({
       ...prev,
       [categoryId]: !prev[categoryId],
     }));
   };
 
-  const showTipDetails = (tip) => {
+  const showTipDetails = (tip: any) => {
     setSelectedTip(tip);
     setModalVisible(true);
     Animated.spring(scaleValue, {
@@ -65,26 +67,27 @@ export default function NutritionTips() {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 18, marginBottom: 20 }}>
-        Porady i ciekawostki dietetyczne
-      </Text>
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.push('/NutritionModule')}
+      >
+        <Ionicons name="arrow-back" size={24} color="white" />
+      </TouchableOpacity>
+
+      <Text style={styles.title}>Porady i Ciekawostki Dietetyczne</Text>
       <ScrollView>
         {categories.map((category) => (
-          <View key={category.id} style={{ marginBottom: 20 }}>
-            <TouchableOpacity onPress={() => toggleCategory(category.id)}>
-              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                {category.name}
-              </Text>
+          <View key={category.id} style={styles.categoryContainer}>
+            <TouchableOpacity onPress={() => toggleCategory(category.id)} style={styles.categoryHeader}>
+              <Text style={styles.categoryTitle}>{category.name}</Text>
             </TouchableOpacity>
             {expandedCategories[category.id] && (
-              <View style={{ paddingLeft: 10, marginTop: 10 }}>
+              <View style={styles.subcategoryContainer}>
                 {category.diet_subcategories.map((subcategory) => (
-                  <View key={subcategory.id} style={{ marginBottom: 10 }}>
+                  <View key={subcategory.id} style={styles.subcategoryItem}>
                     <TouchableOpacity onPress={() => showTipDetails(subcategory.diet_tips[0])}>
-                      <Text style={{ fontSize: 14, fontWeight: '600' }}>
-                        {subcategory.name}
-                      </Text>
+                      <Text style={styles.subcategoryTitle}>{subcategory.name}</Text>
                     </TouchableOpacity>
                   </View>
                 ))}
@@ -105,7 +108,7 @@ export default function NutritionTips() {
           <Animated.View style={[styles.modalContent, { transform: [{ scale: scaleValue }] }]}>
             <Text style={styles.modalTitle}>{selectedTip?.title}</Text>
             <Text style={styles.modalDescription}>{selectedTip?.description}</Text>
-            <Button title="Zamknij" onPress={closeModal} />
+            <Button title="Zamknij" onPress={closeModal} color="#1E90FF" />
           </Animated.View>
         </View>
       </Modal>
@@ -114,6 +117,58 @@ export default function NutritionTips() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#2C2C2C', 
+    padding: 20,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 50,
+    marginTop: 32,
+  },
+  title: {
+    fontSize: 32,
+    color: 'white',
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  categoryContainer: {
+    marginBottom: 20,
+  },
+  categoryHeader: {
+    backgroundColor: '#333', 
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 3,
+    elevation: 4,
+  },
+  categoryTitle: {
+    fontSize: 18,
+    color: 'white',
+  },
+  subcategoryContainer: {
+    paddingLeft: 10,
+    marginTop: 10,
+  },
+  subcategoryItem: {
+    marginBottom: 10,
+  },
+  subcategoryTitle: {
+    fontSize: 16,
+    color: 'white',
+    fontWeight: '600',
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',

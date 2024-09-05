@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { Provider as PaperProvider, RadioButton } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const calculateCalories = (age, weight, height, gender, activityLevel) => {
   let bmr;
@@ -43,6 +45,7 @@ const CalorieCalculator = () => {
   const [gender, setGender] = useState('male');
   const [activityLevel, setActivityLevel] = useState('sedentary');
   const [calories, setCalories] = useState(null);
+  const router = useRouter();
 
   const handleCalculate = () => {
     const result = calculateCalories(
@@ -58,6 +61,15 @@ const CalorieCalculator = () => {
   return (
     <PaperProvider>
       <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.push('/NutritionModule')}
+        >
+          <Ionicons name="arrow-back" size={24} color="white" />
+        </TouchableOpacity>
+
+        <Text style={styles.title}>Kalkulator Kalorii</Text>
+
         <Text style={styles.label}>Wiek:</Text>
         <TextInput
           style={styles.input}
@@ -88,14 +100,16 @@ const CalorieCalculator = () => {
             value="male"
             status={gender === 'male' ? 'checked' : 'unchecked'}
             onPress={() => setGender('male')}
+            color='#1E90FF'
           />
-          <Text>Mężczyzna</Text>
+          <Text style={styles.radioText}>Mężczyzna</Text>
           <RadioButton
             value="female"
             status={gender === 'female' ? 'checked' : 'unchecked'}
             onPress={() => setGender('female')}
+            color='#1E90FF'
           />
-          <Text>Kobieta</Text>
+          <Text style={styles.radioText}>Kobieta</Text>
         </View>
 
         <Text style={styles.label}>Poziom aktywności:</Text>
@@ -111,9 +125,14 @@ const CalorieCalculator = () => {
           <Picker.Item label="Bardzo aktywny tryb życia (np. codzienne intensywne treningi)" value="very active" />
         </Picker>
 
-        <Button title="Oblicz" onPress={handleCalculate} />
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={handleCalculate}
+        >
+          <Text style={styles.submitButtonText}>Oblicz</Text>
+        </TouchableOpacity>
 
-        {calories && (
+        {calories !== null && (
           <Text style={styles.result}>Dzienne zapotrzebowanie kaloryczne: {calories} kcal</Text>
         )}
       </View>
@@ -123,35 +142,79 @@ const CalorieCalculator = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     flex: 1,
-    justifyContent: 'center'
+    backgroundColor: '#2C2C2C', 
+    padding: 20,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 50,
+    marginTop: 32,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 32,
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
   },
   label: {
     marginBottom: 8,
-    fontSize: 16
+    fontSize: 16,
+    color: 'white',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    marginBottom: 16
+    borderColor: '#555',
+    padding: 10,
+    marginBottom: 16,
+    color: 'white',
+    backgroundColor: '#333', 
+    borderRadius: 5,
   },
   radioGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16
+    marginBottom: 16,
+  },
+  radioText: {
+    color: 'white',
+    marginHorizontal: 8,
+    fontSize: 16,
   },
   picker: {
     height: 50,
     width: '100%',
-    marginBottom: 16
+    marginBottom: 16,
+    color: 'white',
+    backgroundColor: '#333', 
+    borderRadius: 5,
+  },
+  submitButton: {
+    backgroundColor: '#1E90FF',
+    padding: 10,
+    marginTop: 15,
+    height: 40,
+    justifyContent: 'center',
+    borderRadius: 5,
+  },
+  submitButtonText: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   result: {
     marginTop: 20,
     fontSize: 18,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+    color: 'white',
+  },
 });
 
 export default CalorieCalculator;
