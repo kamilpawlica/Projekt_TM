@@ -1,9 +1,22 @@
-// app/ExerciseList.tsx
 import React, { useState, useEffect } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Modal, Button, StyleSheet, Animated } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Modal, Button, StyleSheet, Animated, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { supabase } from './../db/SupabaseConfig';
+
+// Import GIFs
+import pushupGif from '../assets/pushup.gif';
+import squatGif from '../assets/squat.gif';
+import lungesGif from '../assets/lunges.gif';
+import hipthrustGif from '../assets/hipthrust.gif';
+import benchpressGif from '../assets/benchpress.gif';
+import deadliftGif from '../assets/deadlift.gif';
+import pullupsGif from '../assets/pullups.gif';
+import barbellrowGif from '../assets/barbellrow.gif';
+import crunchesGif from '../assets/crunches.gif';
+import plankGif from '../assets/plank.gif';
+import obliquecrunchesGif from '../assets/obliquecrunches.gif';
+import dumbbellraisesGif from '../assets/dumbbellraises.gif';
 
 const getExercisesByMuscleGroup = async () => {
   const { data, error } = await supabase
@@ -72,6 +85,37 @@ export default function ExerciseList() {
     }).start(() => setModalVisible(false));
   };
 
+  const renderExerciseGif = (name: string) => {
+    switch (name) {
+      case 'Pompki':
+        return pushupGif;
+      case 'Przysiady':
+        return squatGif;
+      case 'Wykroki':
+        return lungesGif;
+      case 'Hip Thrust':
+        return hipthrustGif;
+      case 'Wyciskanie sztangi na ławce poziomej':
+        return benchpressGif;
+      case 'Martwy ciąg':
+        return deadliftGif;
+      case 'Podciąganie na drążku':
+        return pullupsGif;
+      case 'Wiosłowanie sztangą':
+        return barbellrowGif;
+      case 'Brzuszki':
+        return crunchesGif;
+      case 'Plank':
+        return plankGif;
+      case 'Brzuszki skośne':
+        return obliquecrunchesGif;
+      case 'Unoszenie hantli bokiem':
+        return dumbbellraisesGif;
+      default:
+        return null;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -113,8 +157,13 @@ export default function ExerciseList() {
       >
         <View style={styles.modalOverlay}>
           <Animated.View style={[styles.modalContent, { transform: [{ scale: scaleValue }] }]}>
-            <Text style={styles.modalTitle}>Szczegóły ćwiczenia: {selectedExercise?.name}</Text>
-            <Text style={styles.modalInstructions}>{selectedExercise?.instructions}</Text>
+            {selectedExercise && (
+              <>
+                <Image source={renderExerciseGif(selectedExercise.name)} style={styles.exerciseGif} />
+                <Text style={styles.modalTitle}>Szczegóły ćwiczenia: {selectedExercise.name}</Text>
+                <Text style={styles.modalInstructions}>{selectedExercise.instructions}</Text>
+              </>
+            )}
             <Button title="Zamknij" onPress={closeModal} color="#1E90FF" />
           </Animated.View>
         </View>
@@ -126,9 +175,9 @@ export default function ExerciseList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2C2C2C', 
+    backgroundColor: '#2C2C2C',
     padding: 20,
-    marginTop: 0, 
+    marginTop: 0,
   },
   backButton: {
     width: 40,
@@ -157,7 +206,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   exerciseItem: {
-    backgroundColor: '#333', 
+    backgroundColor: '#333',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
@@ -195,5 +244,10 @@ const styles = StyleSheet.create({
   modalInstructions: {
     fontSize: 16,
     marginBottom: 20,
+  },
+  exerciseGif: {
+    width: '100%',
+    height: 200, // Dostosuj wysokość w zależności od potrzeb
+    marginBottom: 10,
   },
 });
