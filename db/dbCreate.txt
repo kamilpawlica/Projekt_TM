@@ -68,29 +68,85 @@ INSERT INTO exercises (name, description, instructions, difficulty_level, muscle
 ('Pompki', 'Ćwiczenie na klatkę piersiową', 'Opierając się na rękach i palcach stóp, zginaj ramiona, obniżając ciało do podłogi.', 2, 2),
 ('Martwy ciąg', 'Ćwiczenie na plecy', 'Podnieś ciężar z ziemi, utrzymując plecy prosto.', 3, 3),
 ('Podciąganie na drążku', 'Ćwiczenie na ramiona i plecy', 'Podciągnij się na drążku, trzymając ręce szeroko.', 3, 3),
-('Brzuszki', 'Ćwiczenie na brzuch', 'Leżąc na plecach, unoś tułów w kierunku kolan.', 1, 5);
+('Brzuszki', 'Ćwiczenie na brzuch', 'Leżąc na plecach, unoś tułów w kierunku kolan.', 1, 5),
+('Wykroki', 'Ćwiczenie na nogi', 'Wykonuj krok do przodu, zginając oba kolana, a następnie wróć do pozycji wyjściowej.', 2, 1),
+('Wyciskanie sztangi na ławce poziomej', 'Ćwiczenie na klatkę piersiową', 'Połóż się na ławce poziomej, trzymając sztangę na klatce piersiowej i wypchnij ją do góry.', 3, 2),
+('Wiosłowanie sztangą', 'Ćwiczenie na plecy', 'Pochyl się do przodu i wiosłuj sztangę do klatki piersiowej, trzymając plecy prosto.', 2, 3),
+('Unoszenie hantli bokiem', 'Ćwiczenie na ramiona', 'Stojąc prosto, unieś hantle do boków, aż ramiona będą równoległe do podłogi.', 2, 4),
+('Plank', 'Ćwiczenie na brzuch', 'Podpierając się na przedramionach i palcach stóp, utrzymaj ciało w jednej linii przez określony czas.', 1, 5),
+('Hip Thrust', 'Ćwiczenie na pośladki', 'Usiądź na podłodze z plecami opartymi o ławkę i unosząc miednicę, napnij pośladki.', 3, 1),
+('Podciąganie na drążku', 'Ćwiczenie na plecy i ramiona', 'Podciągnij się na drążku, trzymając ręce szeroko, aż broda znajdzie się nad drążkiem.', 3, 3),
+('Brzuszki skośne', 'Ćwiczenie na boczne partie brzucha', 'Leżąc na plecach, unoś tułów w kierunku jednego z kolan, napinając boczne mięśnie brzucha.', 2, 5);
 
 -- Dodawanie przykładowych danych do planów treningowych
 INSERT INTO workout_plans (name, difficulty_level, description) VALUES
-('Plan dla początkujących', 1, 'Podstawowy plan treningowy dla osób początkujących.');
+('Plan dla początkujących', 1, 'Podstawowy plan treningowy dla osób początkujących.'),
+('Plan na masę mięśniową', 3, 'Zaawansowany plan treningowy nastawiony na przyrost masy mięśniowej.'),
+('Plan na redukcję tkanki tłuszczowej', 2, 'Plan treningowy skupiony na spalaniu tłuszczu i poprawie kondycji.'),
+('Plan ogólnorozwojowy', 2, 'Plan treningowy, który angażuje wszystkie grupy mięśniowe w równych proporcjach.');
 
 -- Dodawanie przykładowych danych do powiązań ćwiczeń z planami treningowymi
 INSERT INTO workout_plan_exercises (workout_plan_id, exercise_id, "order") VALUES
+-- Plan dla początkujących
 (1, 1, 1),
 (1, 2, 2),
-(1, 5, 3);
+(1, 5, 3),
+
+-- Plan na masę mięśniową
+(2, 1, 1),
+(2, 2, 2),
+(2, 3, 3),
+(2, 4, 4),
+(2, 6, 5),
+(2, 7, 6),
+
+-- Plan na redukcję tkanki tłuszczowej
+(3, 5, 1),
+(3, 8, 2),
+
+-- Plan ogólnorozwojowy
+(4, 1, 1),
+(4, 2, 2),
+(4, 3, 3),
+(4, 4, 4),
+(4, 5, 5),
+(4, 8, 6);
 
 -- Dodawanie przykładowych danych do modułu dietetycznego
 INSERT INTO diet_categories (name) VALUES
 ('Porady na redukcję tkanki tłuszczowej'),
-('Porady na przyrost masy mięśniowej');
+('Porady na przyrost masy mięśniowej'),
+('Porady na utrzymanie zdrowej diety'),
+('Porady na zwiększenie energii przed treningiem');
 
 INSERT INTO diet_subcategories (category_id, name) VALUES
 (1, 'Picie dużej ilości wody'),
 (1, 'Deficyt kaloryczny'),
-(2, 'Większa podaż białka');
+(2, 'Większa podaż białka'),
+(3, 'Zbilansowane posiłki'),
+(3, 'Zdrowe przekąski'),
+(4, 'Węglowodany przed treningiem'),
+(4, 'Suplementacja przed treningiem');
 
+-- Dodawanie przykładowych danych do tabeli diet_tips
 INSERT INTO diet_tips (subcategory_id, title, description) VALUES
+-- Porady dla subkategorii 'Picie dużej ilości wody'
 (1, 'Dlaczego warto pić dużo wody podczas redukcji', 'Woda pomaga w metabolizmie, usuwa toksyny i wspiera uczucie sytości.'),
+
+-- Porady dla subkategorii 'Deficyt kaloryczny'
 (2, 'Dlaczego trzeba jeść mniej kalorii', 'Aby schudnąć, musisz spożywać mniej kalorii niż spalasz.'),
-(3, 'Rola białka w budowaniu masy mięśniowej', 'Białko jest niezbędne do odbudowy mięśni po treningu.');
+
+-- Porady dla subkategorii 'Większa podaż białka'
+(3, 'Rola białka w budowaniu masy mięśniowej', 'Białko jest niezbędne do odbudowy mięśni po treningu.'),
+
+-- Porady dla subkategorii 'Zbilansowane posiłki'
+(4, 'Zbilansowane posiłki', 'Zbilansowane posiłki z odpowiednią ilością białka, tłuszczy i węglowodanów wspierają ogólne zdrowie.'),
+
+-- Porady dla subkategorii 'Zdrowe przekąski'
+(5, 'Zdrowe przekąski', 'Wybieraj przekąski bogate w błonnik i białko, aby utrzymać energię i kontrolować głód.'),
+
+-- Porady dla subkategorii 'Węglowodany przed treningiem'
+(6, 'Węglowodany przed treningiem', 'Spożywanie węglowodanów przed treningiem może zwiększyć Twoją energię i wydajność. Wybieraj źródła węglowodanów o niskim indeksie glikemicznym, aby uniknąć nagłych skoków cukru we krwi.'),
+
+-- Porady dla subkategorii 'Suplementacja przed treningiem'
+(7, 'Suplementacja przed treningiem', 'Suplementy przed treningiem mogą pomóc zwiększyć wydajność i wytrzymałość. Wybieraj produkty, które zawierają składniki wspierające energię i koncentrację, takie jak kofeina lub beta-alanina.');

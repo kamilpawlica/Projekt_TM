@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -8,6 +8,7 @@ const Inputs = () => {
    const [weight, setWeight] = useState('');
    const [bmi, setBmi] = useState('');
    const [bmiResult, setBmiResult] = useState('');
+   const [modalVisible, setModalVisible] = useState(false);
    const router = useRouter();
 
    const handleHeight = (text: string) => {
@@ -76,8 +77,45 @@ const Inputs = () => {
             <Text style={styles.submitButtonText}>Oblicz</Text>
          </TouchableOpacity>
 
+         {/* Display the BMI result */}
          <Text style={styles.output}>{bmi}</Text>
-         <Text style={styles.resultText}>{bmiResult}</Text>
+
+         {/* Display the BMI result description and button */}
+         <View style={styles.resultContainer}>
+            <Text style={styles.resultText}>{bmiResult}</Text>
+            {bmiResult ? (
+               <TouchableOpacity
+                  style={styles.infoButton}
+                  onPress={() => setModalVisible(true)}
+               >
+                  <Ionicons name="information-circle-outline" size={24} color="#1E90FF" />
+               </TouchableOpacity>
+            ) : null}
+         </View>
+
+         {/* Modal for BMI Interpretation */}
+         <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}
+         >
+            <View style={styles.modalContainer}>
+               <View style={styles.modalContent}>
+                  <Text style={styles.modalTitle}>Interpretacja wyników BMI</Text>
+                  <Text style={styles.modalText}>{"< 18.5 : Waga zbyt niska"}</Text>
+                  <Text style={styles.modalText}>{"18.5 - 24.9 : Waga prawidłowa"}</Text>
+                  <Text style={styles.modalText}>{"25 - 29.9 : Nadwaga"}</Text>
+                  <Text style={styles.modalText}>{">= 30 : Otyłość"}</Text>
+                  <TouchableOpacity
+                     style={styles.closeButton}
+                     onPress={() => setModalVisible(false)}
+                  >
+                     <Text style={styles.closeButtonText}>Zamknij</Text>
+                  </TouchableOpacity>
+               </View>
+            </View>
+         </Modal>
       </View>
    );
 };
@@ -117,6 +155,11 @@ const styles = StyleSheet.create({
       backgroundColor: '#333', 
       borderRadius: 5,
    },
+   label: {
+      marginLeft: 15,
+      fontSize: 18,
+      color: 'white', // changed to white
+   },
    submitButton: {
       backgroundColor: '#1E90FF',
       padding: 10,
@@ -135,17 +178,53 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       fontSize: 30,
       color: 'white',
+      marginTop: 20,
+   },
+   resultContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 10, // added spacing
    },
    resultText: {
-      paddingTop: 20,
-      paddingBottom: 10,
       textAlign: 'center',
-      fontSize: 30,
+      fontSize: 24,
       color: '#1E90FF', 
    },
-   label: {
-      marginLeft: 15,
+   infoButton: {
+      marginLeft: 10,
+   },
+   modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+   },
+   modalContent: {
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 20,
+      alignItems: 'center',
+      width: '80%',
+   },
+   modalTitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 15,
+   },
+   modalText: {
       fontSize: 18,
+      marginBottom: 10,
+   },
+   closeButton: {
+      backgroundColor: '#1E90FF',
+      padding: 10,
+      borderRadius: 5,
+      marginTop: 20,
+   },
+   closeButtonText: {
       color: 'white',
+      fontSize: 16,
+      fontWeight: 'bold',
    },
 });
